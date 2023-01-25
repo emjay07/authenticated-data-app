@@ -7,6 +7,7 @@ k_REGION = "us-west-2"
 k_ACCOUNT_ID = "110561467685"
 k_DASHBOARD_ID = "87f65650-a75c-427d-8d89-6d46384030f8"
 k_ROLE_ARN = "arn:aws:iam::110561467685:role/Supermarine-Quicklit-GenerateEmbedUrlForRegisteredUser"
+k_USER_ARN = "arn:aws:iam::110561467685:user/sm-quicklit-registered"
 k_OPEN_ID_TOKEN = ""
 k_DOMAINS = ["https://*.streamlit.app"]
 k_NAMESPACE = "default"
@@ -36,16 +37,17 @@ def create_qs_client(region_id, role_arn):
 
     return qs_client
 
-def register_user(qs_client, account_id, qs_namespace, user_email):
+def register_user(qs_client, account_id, qs_namespace, user_email, iam_arn):
 
     try:
         response = qs_client.register_user(
             AwsAccountId = account_id,
             Namespace = qs_namespace,
             Email = user_email,
-            UserName = user_email,
-            IdentityType = "QUICKSIGHT",
-            UserRole = "READER"
+            IamArm = iam_arn,
+            IdentityType = "IAM",
+            UserRole = "READER",
+            SessionName = "RegisterUser"
         )
 
         return response
@@ -113,7 +115,7 @@ def submit_callback(user_email: str):
             break
 
     if user_arn == "":
-        new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email)
+        new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email, k_USER_ARN)
 
         register_url = new_user_response['UserInvitationUrl']
         st.components.v1.iframe(register_url, width=None, height=1000, scrolling=True)
