@@ -104,6 +104,10 @@ def submit_callback(user_email: str):
 
     user_arn = ""
     for user in enumerate(already_registered_users):
+
+        # debug
+        st.write(user)
+        
         if user['Email'] == user_email:
             user_arn = user['Arn'] # this is probably bad and not secure. 
             break
