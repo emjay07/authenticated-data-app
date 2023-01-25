@@ -10,6 +10,7 @@ k_USER_ARN = "arn:aws:iam::110561467685:user/sm-quicklit-registered"
 k_ROLE_ARN = "arn:aws:iam::110561467685:role/Supermarine-Quicklit-GenerateEmbedUrlForRegisteredUser"
 k_OPEN_ID_TOKEN = ""
 k_DOMAINS = ["https://*.streamlit.app"]
+k_NAMESPACE = "default"
 
 # Function to generate embedded URL
 # regionId: AWS Region ID  
@@ -19,7 +20,7 @@ k_DOMAINS = ["https://*.streamlit.app"]
 # allowedDomains: Runtime allowed domain for embedding
 # openIdToken: Token to assume role with roleArn
 # roleArn: IAM user role to use for embedding
-def generateEmbeddingURLForRegisteredUser(regionId, accountId, dashboardId, userArn, allowedDomains, openIdToken, roleArn):
+def generateEmbeddingURLForRegisteredUser(regionId, accountId, dashboardId, userArn, allowedDomains, openIdToken, roleArn, qs_namespace):
     # Create STS client
     sts = boto.client('sts')
 
@@ -34,16 +35,30 @@ def generateEmbeddingURLForRegisteredUser(regionId, accountId, dashboardId, user
     creds = assumed_role['Credentials']
 
     # Create quicksight client
-    quicksightClient = boto.client(
+    qs_client = boto.client(
         'quicksight',
         region_name = regionId,
         aws_access_key_id = creds['AccessKeyId'],
         aws_secret_access_key = creds['SecretAccessKey'],
         aws_session_token = creds['SessionToken']
     )
-    
+
     try:
-        response = quicksightClient.generate_embed_url_for_registered_user(
+        users = qs_client.list_users(
+            AwsAccountId = accountId,
+            MaxResults = 10,
+            Namespace = qs_namespace
+        )
+
+        user_list = users["UserList"]
+        st.write(user_list)
+    
+    except ClientError as e:
+        st.write(e)
+        return {}
+
+    try:
+        response = qs_client.generate_embed_url_for_registered_user(
             AwsAccountId = accountId,
             ExperienceConfiguration = {
                 'Dashboard': {
@@ -61,7 +76,7 @@ def generateEmbeddingURLForRegisteredUser(regionId, accountId, dashboardId, user
         st.write(e)
         return {}
 
-response = generateEmbeddingURLForRegisteredUser(k_REGION, k_ACCOUNT_ID, k_DASHBOARD_ID, k_USER_ARN, k_DOMAINS, k_OPEN_ID_TOKEN, k_ROLE_ARN)
+response = generateEmbeddingURLForRegisteredUser(k_REGION, k_ACCOUNT_ID, k_DASHBOARD_ID, k_USER_ARN, k_DOMAINS, k_OPEN_ID_TOKEN, k_ROLE_ARN, k_NAMESPACE)
 
 # render dashboard
 if "EmbedUrl" in response:
