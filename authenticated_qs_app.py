@@ -39,7 +39,7 @@ def create_qs_client(region_id, role_arn):
 
     return qs_client
 
-def register_user(qs_client, account_id, qs_namespace, user_email, role_arn):
+def register_user(qs_client, account_id, qs_namespace, user_email, arn):
 
     try:
         response = qs_client.register_user(
@@ -52,10 +52,11 @@ def register_user(qs_client, account_id, qs_namespace, user_email, role_arn):
             AwsAccountId = account_id,
             Namespace = qs_namespace,
             Email = user_email,
-            IamArn = role_arn,
+            IamArn = arn,
             IdentityType = "IAM",
             SessionName = "RegisterUser-IAM",
-            UserRole = "READER"
+            UserRole = "READER",
+            UserName = user_email
         )
 
         return response
@@ -120,7 +121,7 @@ def submit_callback(user_email: str):
             break
 
     if user_arn == "":
-        new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email, k_ROLE_ARN)
+        new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email, k_USER_ARN)
 
         # debug
         st.write(new_user_response)
