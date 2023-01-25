@@ -96,36 +96,39 @@ def generate_embedding_url_for_registered_user(qs_client, account_id, dashboard_
         st.write(e)
         return {}
 
+def submit_callback():
+    qs_client = create_qs_client(k_REGION, k_ROLE_ARN)
+
+    already_registered_users = list_users(qs_client, k_ACCOUNT_ID, k_NAMESPACE)
+
+    user_arn = ""
+    for i, user in enumerate(already_registered_users):
+        if user['Email'] == user_email:
+            user_arn = user['Arn'] # this is probably bad and not secure. 
+            break
+
+    if user_arn == "":
+        new_user_response = register_user()
+
+        register_url = new_user_response['UserInvitationUrl']
+        st.components.v1.iframe(register_url, width=None, height=1000, scrolling=True)
+
+        user_arn = new_user_response['User']['Arn']
+
+    url_response = generate_embedding_url_for_registered_user(qs_client, k_ACCOUNT_ID, k_DASHBOARD_ID, user_arn, k_DOMAINS)
+
+    # render dashboard
+    k_EMBED_KEY = "EmbedUrl"
+    if k_EMBED_KEY in url_response:
+        html = url_response[k_EMBED_KEY]
+        st.components.v1.iframe(html, width=None, height=1000, scrolling=True)
+    else: 
+        st.write("No Embedded URL found")
+
+
 st.title("Registered Users - QuickSight App")
 
 st.write("Please enter your email address to get started")
 
 user_email = st.text_input("Email Address", value="example@domain.com")
-
-qs_client = create_qs_client(k_REGION, k_ROLE_ARN)
-
-already_registered_users = list_users(qs_client, k_ACCOUNT_ID, k_NAMESPACE)
-
-user_arn = ""
-for i, user in enumerate(already_registered_users):
-    if user['Email'] == user_email:
-        user_arn = user['Arn'] # this is probably bad and not secure. 
-        break
-
-if user_arn == "":
-    new_user_response = register_user()
-
-    register_url = new_user_response['UserInvitationUrl']
-    st.components.v1.iframe(register_url, width=None, height=1000, scrolling=True)
-
-    user_arn = new_user_response['User']['Arn']
-
-url_response = generate_embedding_url_for_registered_user(qs_client, k_ACCOUNT_ID, k_DASHBOARD_ID, user_arn, k_DOMAINS)
-
-# render dashboard
-k_EMBED_KEY = "EmbedUrl"
-if k_EMBED_KEY in url_response:
-    html = url_response[k_EMBED_KEY]
-    st.components.v1.iframe(html, width=None, height=1000, scrolling=True)
-else: 
-    st.write("No Embedded URL found")
+clicked = st.button("Submit", on_click=submit_callback)
