@@ -43,6 +43,7 @@ def register_user(qs_client, account_id, qs_namespace, user_email):
             AwsAccountId = account_id,
             Namespace = qs_namespace,
             Email = user_email,
+            UserName = user_email,
             IdentityType = "QUICKSIGHT",
             UserRole = "READER"
         )
@@ -102,7 +103,7 @@ def submit_callback(user_email: str):
     already_registered_users = list_users(qs_client, k_ACCOUNT_ID, k_NAMESPACE)
 
     user_arn = ""
-    for i, user in enumerate(already_registered_users):
+    for user in enumerate(already_registered_users):
         if user['Email'] == user_email:
             user_arn = user['Arn'] # this is probably bad and not secure. 
             break
