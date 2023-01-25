@@ -54,7 +54,7 @@ def register_user(qs_client, account_id, qs_namespace, user_email, arn):
             Email = user_email,
             IamArn = arn,
             IdentityType = "IAM",
-            SessionName = "RegisterUser-IAM",
+            # SessionName = "RegisterUser-IAM",
             UserRole = "READER"
         )
 
