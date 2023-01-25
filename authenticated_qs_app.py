@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 k_REGION = "us-west-2"
 k_ACCOUNT_ID = "110561467685"
 k_DASHBOARD_ID = "87f65650-a75c-427d-8d89-6d46384030f8"
-k_USER_ARN = ""
+k_USER_ARN = "arn:aws:iam::110561467685:user/sm-quicklit-registered"
 k_ROLE_ARN = "arn:aws:iam::110561467685:role/Supermarine-Quicklit-GenerateEmbedUrlForRegisteredUser"
 k_OPEN_ID_TOKEN = ""
 k_DOMAINS = ["https://*.streamlit.app"]
