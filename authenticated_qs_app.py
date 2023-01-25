@@ -36,7 +36,7 @@ def create_qs_client(region_id, role_arn):
 
     return qs_client
 
-def register_user(qs_client, account_id, qs_namespace):
+def register_user(qs_client, account_id, qs_namespace, user_email):
 
     try:
         response = qs_client.register_user(
@@ -96,7 +96,7 @@ def generate_embedding_url_for_registered_user(qs_client, account_id, dashboard_
         st.write(e)
         return {}
 
-def submit_callback():
+def submit_callback(user_email: str):
     qs_client = create_qs_client(k_REGION, k_ROLE_ARN)
 
     already_registered_users = list_users(qs_client, k_ACCOUNT_ID, k_NAMESPACE)
@@ -108,7 +108,7 @@ def submit_callback():
             break
 
     if user_arn == "":
-        new_user_response = register_user()
+        new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email)
 
         register_url = new_user_response['UserInvitationUrl']
         st.components.v1.iframe(register_url, width=None, height=1000, scrolling=True)
@@ -131,4 +131,4 @@ st.title("Registered Users - QuickSight App")
 st.write("Please enter your email address to get started")
 
 user_email = st.text_input("Email Address", value="example@domain.com")
-clicked = st.button("Submit", on_click=submit_callback)
+clicked = st.button("Submit", on_click=submit_callback, args=(user_email))
