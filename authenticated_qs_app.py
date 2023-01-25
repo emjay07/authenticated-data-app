@@ -131,4 +131,4 @@ st.title("Registered Users - QuickSight App")
 st.write("Please enter your email address to get started")
 
 user_email = st.text_input("Email Address", value="example@domain.com")
-clicked = st.button("Submit", on_click=submit_callback, args=(user_email))
+clicked = st.button("Submit", on_click=submit_callback, kwargs={user_email : user_email})
