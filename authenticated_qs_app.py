@@ -44,7 +44,7 @@ def register_user(qs_client, account_id, qs_namespace, user_email):
             AwsAccountId = account_id,
             Namespace = qs_namespace,
             Email = user_email,
-            IamArm = user_email,
+            UserName = user_email,
             IdentityType = "IAM",
             UserRole = "READER"
         )
