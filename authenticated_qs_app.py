@@ -125,8 +125,9 @@ def submit_callback(user_email: str):
         # debug
         st.write(new_user_response)
 
-        register_url = new_user_response['UserInvitationUrl']
-        st.components.v1.iframe(register_url, width=None, height=1000, scrolling=True)
+        if 'UserInvitationUrl' in new_user_response:
+            register_url = new_user_response['UserInvitationUrl']
+            st.components.v1.iframe(register_url, width=None, height=1000, scrolling=True)
 
         user_arn = new_user_response['User']['Arn']
 
