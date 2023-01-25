@@ -12,6 +12,8 @@ k_OPEN_ID_TOKEN = ""
 k_DOMAINS = ["https://*.streamlit.app"]
 k_NAMESPACE = "default"
 
+st.title("Registered Users - QuickSight App")
+
 def create_qs_client(region_id, role_arn):
     # Create STS client
     sts = boto.client('sts')
@@ -116,6 +118,9 @@ def submit_callback(user_email: str):
     if user_arn == "":
         new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email)
 
+        # debug
+        st.write(new_user_response)
+
         register_url = new_user_response['UserInvitationUrl']
         st.components.v1.iframe(register_url, width=None, height=1000, scrolling=True)
 
@@ -130,9 +135,6 @@ def submit_callback(user_email: str):
         st.components.v1.iframe(html, width=None, height=1000, scrolling=True)
     else: 
         st.write("No Embedded URL found")
-
-
-st.title("Registered Users - QuickSight App")
 
 st.write("Please enter your email address to get started")
 
