@@ -92,7 +92,7 @@ def generate_embedding_url_for_registered_user(qs_client, account_id, dashboard_
                     'InitialDashboardId': dashboard_id
                 }
             },
-            # UserArn = user_arn,
+            UserArn = user_arn,
             AllowedDomains = allowed_domains,
             SessionLifetimeInMinutes = 600
         )
