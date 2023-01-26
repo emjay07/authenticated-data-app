@@ -35,7 +35,7 @@ def create_qs_client(region_id, role_arn):
 
     return qs_client
 
-def register_user(qs_client, account_id, qs_namespace, user_email, arn):
+def register_user(qs_client, account_id, qs_namespace, user_email):
 
     try:
         response = qs_client.register_user(
@@ -45,12 +45,6 @@ def register_user(qs_client, account_id, qs_namespace, user_email, arn):
             UserName = user_email,
             IdentityType = "QUICKSIGHT",
             UserRole = "READER"
-            # AwsAccountId = account_id,
-            # Namespace = qs_namespace,
-            # Email = user_email,
-            # IamArn = arn,
-            # IdentityType = "IAM",
-            # UserRole = "READER"
         )
 
         return response
@@ -102,7 +96,6 @@ def generate_embedding_url_for_registered_user(qs_client, account_id, dashboard_
 def submit_callback(user_email: str):
     st.empty()
 
-
     qs_client = create_qs_client(k_REGION, k_ROLE_ARN)
 
     already_registered_users = list_users(qs_client, k_ACCOUNT_ID, k_NAMESPACE)
@@ -115,7 +108,7 @@ def submit_callback(user_email: str):
             break
 
     if user_arn == "":
-        new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email, k_USER_ARN)
+        new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email)
 
         user_arn = new_user_response['User']['Arn']
 
