@@ -8,8 +8,7 @@ k_ACCOUNT_ID = "110561467685"
 k_DASHBOARD_ID = "87f65650-a75c-427d-8d89-6d46384030f8"
 k_ROLE_ARN = "arn:aws:iam::110561467685:role/Supermarine-Quicklit-GenerateEmbedUrlForRegisteredUser"
 k_USER_ARN = "arn:aws:iam::110561467685:user/sm-quicklit-registered"
-k_OPEN_ID_TOKEN = ""
-k_DOMAINS = ["https://*.streamlit.app"]
+k_DOMAINS = ["https://emjay07-authenticated-data-app-authenticated-qs-app-b4x05v.streamlit.app"]
 k_NAMESPACE = "default"
 
 st.title("Registered Users - QuickSight App")
@@ -93,7 +92,7 @@ def generate_embedding_url_for_registered_user(qs_client, account_id, dashboard_
                     'InitialDashboardId': dashboard_id
                 }
             },
-            UserArn = user_arn,
+            # UserArn = user_arn,
             AllowedDomains = allowed_domains,
             SessionLifetimeInMinutes = 600
         )
