@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 # constants
 k_REGION = "us-west-2"
 k_ACCOUNT_ID = "110561467685"
-k_DASHBOARD_ID_ALLOWED = "87f65650-a75c-427d-8d89-6d46384030f8"
+k_DASHBOARD_ID_ALLOWED = "15c585f9-0952-4c55-9647-f3bd9f9edd4e"
 k_DASHBOARD_ID_DENIED = "ebb7042d-60ed-4dda-847e-45545db10567"
 k_ROLE_ARN = "arn:aws:iam::110561467685:role/Supermarine-Quicklit-GenerateEmbedUrlForRegisteredUser"
 k_USER_ARN = "arn:aws:iam::110561467685:user/sm-quicklit-registered"
