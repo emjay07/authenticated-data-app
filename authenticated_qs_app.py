@@ -41,19 +41,18 @@ def register_user(qs_client, account_id, qs_namespace, user_email, arn):
 
     try:
         response = qs_client.register_user(
-            # AwsAccountId = account_id,
-            # Namespace = qs_namespace,
-            # Email = user_email,
-            # UserName = user_email,
-            # IdentityType = "QUICKSIGHT",
-            # UserRole = "READER"
             AwsAccountId = account_id,
             Namespace = qs_namespace,
             Email = user_email,
-            IamArn = arn,
-            IdentityType = "IAM",
-            # SessionName = "RegisterUser-IAM",
+            UserName = user_email,
+            IdentityType = "QUICKSIGHT",
             UserRole = "READER"
+            # AwsAccountId = account_id,
+            # Namespace = qs_namespace,
+            # Email = user_email,
+            # IamArn = arn,
+            # IdentityType = "IAM",
+            # UserRole = "READER"
         )
 
         return response
