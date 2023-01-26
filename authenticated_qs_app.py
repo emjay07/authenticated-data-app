@@ -117,7 +117,7 @@ def submit_callback(user_email: str):
 
     st.title("Registered Users - QuickSight App")
 
-    st.write("You should now have permissions to view the following dashboard:")
+    st.header("You should now have permissions to view the following dashboard:")
     # render dashboard
     k_EMBED_KEY = "EmbedUrl"
     if k_EMBED_KEY in url_response:
@@ -129,7 +129,7 @@ def submit_callback(user_email: str):
     url_response = generate_embedding_url_for_registered_user(qs_client, k_ACCOUNT_ID, k_DASHBOARD_ID_DENIED, user_arn, k_DOMAINS)
 
     # render dashboard
-    st.write("You should NOT be able to view the following dashboard:")
+    st.header("You should NOT be able to view the following dashboard:")
     if k_EMBED_KEY in url_response:
         html = url_response[k_EMBED_KEY]
         st.components.v1.iframe(html, width=None, height=1000, scrolling=True)
