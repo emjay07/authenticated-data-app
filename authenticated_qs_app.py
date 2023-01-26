@@ -20,7 +20,6 @@ def create_qs_client(region_id, role_arn):
     # Assume proper role
     assumed_role = sts.assume_role(
         RoleArn = role_arn,
-        #WebIdentityToken = openIdToken,
         RoleSessionName = "AssumeRole_RegisteredUser"
     )
 
@@ -111,18 +110,12 @@ def submit_callback(user_email: str):
     user_arn = ""
     for user in already_registered_users:
 
-        # debug
-        st.write(user)
-
         if user['Email'] == user_email:
             user_arn = user['Arn'] # this is probably bad and not secure. 
             break
 
     if user_arn == "":
         new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email, k_USER_ARN)
-
-        # debug
-        st.write(new_user_response)
 
         if 'UserInvitationUrl' in new_user_response:
             register_url = new_user_response['UserInvitationUrl']
