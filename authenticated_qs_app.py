@@ -5,7 +5,8 @@ from botocore.exceptions import ClientError
 # constants
 k_REGION = "us-west-2"
 k_ACCOUNT_ID = "110561467685"
-k_DASHBOARD_ID = "87f65650-a75c-427d-8d89-6d46384030f8"
+k_DASHBOARD_ID_ALLOWED = "87f65650-a75c-427d-8d89-6d46384030f8"
+k_DASHBOARD_ID_DENIED = "15c585f9-0952-4c55-9647-f3bd9f9edd4e"
 k_ROLE_ARN = "arn:aws:iam::110561467685:role/Supermarine-Quicklit-GenerateEmbedUrlForRegisteredUser"
 k_USER_ARN = "arn:aws:iam::110561467685:user/sm-quicklit-registered"
 k_DOMAINS = ["https://emjay07-authenticated-data-app-authenticated-qs-app-b4x05v.streamlit.app"]
@@ -112,11 +113,23 @@ def submit_callback(user_email: str):
 
         user_arn = new_user_response['User']['Arn']
 
-    url_response = generate_embedding_url_for_registered_user(qs_client, k_ACCOUNT_ID, k_DASHBOARD_ID, user_arn, k_DOMAINS)
+    url_response = generate_embedding_url_for_registered_user(qs_client, k_ACCOUNT_ID, k_DASHBOARD_ID_ALLOWED, user_arn, k_DOMAINS)
 
     st.title("Registered Users - QuickSight App")
+
+    st.write("You should now have permissions to view the following dashboard:")
     # render dashboard
     k_EMBED_KEY = "EmbedUrl"
+    if k_EMBED_KEY in url_response:
+        html = url_response[k_EMBED_KEY]
+        st.components.v1.iframe(html, width=None, height=1000, scrolling=True)
+    else: 
+        st.write("No Embedded URL found")
+
+    url_response = generate_embedding_url_for_registered_user(qs_client, k_ACCOUNT_ID, k_DASHBOARD_ID_DENIED, user_arn, k_DOMAINS)
+
+    # render dashboard
+    st.write("You should NOT be able to view the following dashboard:")
     if k_EMBED_KEY in url_response:
         html = url_response[k_EMBED_KEY]
         st.components.v1.iframe(html, width=None, height=1000, scrolling=True)
