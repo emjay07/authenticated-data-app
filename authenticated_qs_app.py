@@ -11,8 +11,6 @@ k_USER_ARN = "arn:aws:iam::110561467685:user/sm-quicklit-registered"
 k_DOMAINS = ["https://emjay07-authenticated-data-app-authenticated-qs-app-b4x05v.streamlit.app"]
 k_NAMESPACE = "default"
 
-st.title("Registered Users - QuickSight App")
-
 def create_qs_client(region_id, role_arn):
     # Create STS client
     sts = boto.client('sts')
@@ -102,6 +100,9 @@ def generate_embedding_url_for_registered_user(qs_client, account_id, dashboard_
         return {}
 
 def submit_callback(user_email: str):
+    st.empty()
+
+
     qs_client = create_qs_client(k_REGION, k_ROLE_ARN)
 
     already_registered_users = list_users(qs_client, k_ACCOUNT_ID, k_NAMESPACE)
@@ -120,6 +121,7 @@ def submit_callback(user_email: str):
 
     url_response = generate_embedding_url_for_registered_user(qs_client, k_ACCOUNT_ID, k_DASHBOARD_ID, user_arn, k_DOMAINS)
 
+    st.title("Registered Users - QuickSight App")
     # render dashboard
     k_EMBED_KEY = "EmbedUrl"
     if k_EMBED_KEY in url_response:
@@ -127,6 +129,8 @@ def submit_callback(user_email: str):
         st.components.v1.iframe(html, width=None, height=1000, scrolling=True)
     else: 
         st.write("No Embedded URL found")
+
+st.title("Registered Users - QuickSight App")
 
 st.write("Please enter your email address to get started")
 
