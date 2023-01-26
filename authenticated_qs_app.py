@@ -116,10 +116,6 @@ def submit_callback(user_email: str):
     if user_arn == "":
         new_user_response = register_user(qs_client, k_ACCOUNT_ID, k_NAMESPACE, user_email, k_USER_ARN)
 
-        if 'UserInvitationUrl' in new_user_response:
-            register_url = new_user_response['UserInvitationUrl']
-            st.components.v1.iframe(register_url, width=None, height=1000, scrolling=True)
-
         user_arn = new_user_response['User']['Arn']
 
     url_response = generate_embedding_url_for_registered_user(qs_client, k_ACCOUNT_ID, k_DASHBOARD_ID, user_arn, k_DOMAINS)
